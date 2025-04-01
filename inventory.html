@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Quán Net - CyberAdmin Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4f46e5',
+                        secondary: '#10b981',
+                        dark: '#1e293b',
+                        light: '#f8fafc'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom styles */
+        .sidebar {
+            transition: all 0.3s ease;
+        }
+        .sidebar.collapsed {
+            width: 80px;
+        }
+        .sidebar.collapsed .nav-text {
+            display: none;
+        }
+        .sidebar.collapsed .logo-text {
+            display: none;
+        }
+        .sidebar.collapsed .nav-link {
+            justify-content: center;
+        }
+        .sidebar.collapsed ~ .main-content {
+            margin-left: 80px;
+        }
+        .main-content {
+            transition: all 0.3s ease;
+            margin-left: 250px;
+            min-height: 100vh;
+        }
+        .computer-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+        .animate-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        .chart-container {
+            height: 300px;
+        }
+        .stat-card {
+            transition: all 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Sidebar -->
+    <div class="sidebar fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-50">
+        <div class="flex items-center justify-center h-16 border-b border-gray-200">
+            <div class="flex items-center space-x-3">
+                <i class="fas fa-gamepad text-2xl text-primary"></i>
+                <span class="logo-text text-xl font-bold text-dark">CyberAdmin Pro</span>
+            </div>
+        </div>
+        <div class="py-4 px-2 overflow-y-auto">
+            <ul class="space-y-2">
+                <li>
+                    <a href="index.html" class="nav-link flex items-center p-3 text-gray-700 rounded-lg hover:bg-gray-100">
+                        <i class="fas fa-tachometer-alt fa-fw"></i>
+                        <span class="nav-text ml-3">Tổng quan</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="computers.html" class="nav-link flex items-center p-3 text-gray-700 rounded-lg hover:bg-gray-100">
+                        <i class="fas fa-desktop fa-fw"></i>
+                        <span class="nav-text ml-3">Quản lý máy trạm</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="customers.html" class="nav-link flex items-center p-3 text-gray-700 rounded-lg hover:bg-gray-100">
+                        <i class="fas fa-users fa-fw"></i>
+                        <span class="nav-text ml-3">Quản lý khách hàng</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="orders.html" class="nav-link flex items-center p-3 text-gray-700 rounded-lg hover:bg-gray-100">
+                        <i class="fas fa-utensils fa-fw"></i>
+                        <span class="nav-text ml-3">Thực đơn & Đặt hàng</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="inventory.html" class="nav-link flex items-center p-3 text-gray-700 rounded-lg hover:bg-gray-100 bg-primary text-white">
+                        <i class="fas fa-warehouse fa-fw"></i>
+                        <span class="nav-text ml-3">Quản lý kho</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="staff.html" class="nav-link flex items-center p-3 text-gray-700 rounded-lg hover:bg-gray-100">
+                        <i class="fas fa-user-tie fa-fw"></i>
+                        <span class="nav-text ml-3">Nhân viên</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="reports.html" class="nav-link flex items-center p-3 text-gray-700 rounded-lg hover:bg-gray-100">
+                        <i class="fas fa-chart-line fa-fw"></i>
+                        <span class="nav-text ml-3">Thống kê & Báo cáo</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="settings.html" class="nav-link flex items-center p-3 text-gray-700 rounded-lg hover:bg-gray-100">
+                        <i class="fas fa-cog fa-fw"></i>
+                        <span class="nav-text ml-3">Cài đặt hệ thống</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Navigation -->
+        <header class="bg-white shadow-sm">
+            <div class="flex justify-between items-center px-6 py-4">
+                <div class="flex items-center space-x-4">
+                    <button id="sidebarToggle" class="text-gray-600 hover:text-primary focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <h1 class="text-xl font-semibold text-dark">Quản lý kho hàng</h1>
+                </div>
+                <div class="flex items-center space-x-6">
+                    <div class="relative">
+                        <button class="text-gray-500 hover:text-primary focus:outline-none">
+                            <i class="fas fa-bell fa-lg"></i>
+                            <span class="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500"></span>
+                        </button>
+                    </div>
+                    <div class="relative">
+                        <button class="text-gray-500 hover:text-primary focus:outline-none">
+                            <i class="fas fa-envelope fa-lg"></i>
+                            <span class="absolute top-0 right-0 h-2 w-2 rounded-full bg-secondary"></span>
+                        </button>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <div class="h-8 w-8 rounded-full bg-primary flex items-center justify-center text-white">
+                            <span>AD</span>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-dark">Admin Quản Trị</p>
+                            <p class="text-xs text-gray-500">Quản lý cấp cao</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Management Content -->
+        <div class="p-6">
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                <div class="stat-card bg-white rounded-lg shadow p-6 hover:shadow-md">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+                            <i class="fas fa-boxes fa-lg"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-500">Tổng sản phẩm</p>
+                            <p class="text-2xl font-semibold text-dark">128</p>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <p class="text-sm text-gray-500"><span class="text-green-500 font-medium">+5</span> so với tháng trước</p>
+                    </div>
+                </div>
+                <div class="stat-card bg-white rounded-lg shadow p-6 hover:shadow-md">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-green-100 text-green-600">
+                            <i class="fas fa-check-circle fa-lg"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-500">Sản phẩm có sẵn</p>
+                            <p class="text-2xl font-semibold text-dark">95</p>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <p class="text-sm text-gray-500"><span class="text-green-500 font-medium">92%</span> tỷ lệ có sẵn</p>
+                    </div>
+                </div>
+                <div class="stat-card bg-white rounded-lg shadow p-6 hover:shadow-md">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
+                            <i class="fas fa-exclamation-triangle fa-lg"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-500">Sắp hết hàng</p>
+                            <p class="text-2xl font-semibold text-dark">8</p>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <button class="text-xs bg-yellow-100 text-yellow-600 px-2 py-1 rounded hover:bg-yellow-200">Xem ngay</button>
+                    </div>
+                </div>
+                <div class="stat-card bg-white rounded-lg shadow p-6 hover:shadow-md">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-red-100 text-red-600">
+                            <i class="fas fa-times-circle fa-lg"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-500">Hết hàng</p>
+                            <p class="text-2xl font-semibold text-dark">5</p>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <button class="text-xs bg-red-100 text-red-600 px-2 py-1 rounded hover:bg-red-200">Nhập hàng</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                <!-- Inventory List -->
+                <div class="lg:col-span-2 bg-white rounded-lg shadow">
+                    <div class="flex items-center justify-between p-6 border-b border-gray-200">
+                        <h2 class="text-lg font-semibold text-dark">Danh sách tồn kho</h2>
+                        <div class="flex space-x-2">
+                            <div class="relative">
+                                <input type="text" placeholder="Tìm kiếm..." class="text-sm border border-gray-300 rounded px-3 py-1 pl-8 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                <i class="fas fa-search absolute left-3 top-2 text-gray-400"></i>
+                            </div>
+                            <select class="text-sm border border-gray-300 rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                                <option>Tất cả danh mục</option>
+                                <option>Đồ uống</option>
+                                <option>Đồ ăn nhanh</option>
+                                <option>Linh kiện</option>
+                                <option>Khác</option>
+                            </select>
+                            <button class="text-sm bg-primary text-white px-3 py-1 rounded hover:bg-indigo-700 flex items-center">
+                                <i class="fas fa-plus mr-1"></i> Thêm mới
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mã sản phẩm</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tên sản phẩm</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Danh mục</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tồn kho</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Giá nhập</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Giá bán</th>
+                                        <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trạng thái</th>
+                                        <th scope="col" class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Thao tác</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-primary">#SP-001</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Coca-Cola lon</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Đồ uống</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">32</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">8,000đ</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">15,000đ</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Có sẵn</span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <button class="text-primary hover:text-indigo-900 mr-3"><i class="fas fa-edit"></i></button>
+                                            <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-primary">#SP-002</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Pepsi chai</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Đồ uống</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">24</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">7,500đ</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">15,000đ</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Có sẵn</span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <button class="text-primary hover:text-indigo-900 mr-3"><i class="fas fa-edit"></i></button>
+                                            <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-primary">#SP-003</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Mì tôm Hảo Hảo</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Đồ ăn nhanh</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">12</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">6,000đ</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">12,000đ</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Sắp hết</span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <button class="text-primary hover:text-indigo-900 mr-3"><i class="fas fa-edit"></i></button>
+                                            <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-primary">#SP-004</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Bánh mì pate</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Đồ ăn nhanh</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">5</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">10,000đ</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">20,000đ</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Sắp hết</span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <button class="text-primary hover:text-indigo-900 mr-3"><i class="fas fa-edit"></i></button>
+                                            <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-primary">#SP-005</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Bàn phím cơ</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Linh kiện</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">0</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">450,000đ</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">600,000đ</td>
+                                        <td class="px-6 py-4 whitespace-nowrap">
+                                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">Hết hàng</span>
+                                        </td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                            <button class="text-primary hover:text-indigo-900 mr-3"><i class="fas fa-edit"></i></button>
+                                            <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="mt-4 flex justify-between items-center">
+                            <div class="text-sm text-gray-500">Hiển thị 1-5 trong số 128 sản phẩm</div>
+                            <nav class="flex items-center space-x-1">
+                                <button class="px-3 py-1 rounded border border-gray-300 text-sm text-gray-600 hover:bg-gray-100">&laquo;</button>
+                                <button class="px-3 py-1 rounded bg-primary text-white text-sm">1</button>
+                                <button class="px-3 py-1 rounded border border-gray-300 text-sm text-gray-600 hover:bg-gray-100">2</button>
+                                <button class="px-3 py-1 rounded border border-gray-300 text-sm text-gray-600 hover:bg-gray-100">3</button>
+                                <button class="px-3 py-1 rounded border border-gray-300 text-sm text-gray-600 hover:bg-gray-100">&raquo;</button>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions and Stats -->
+                <div class="space-y-6">
+                    <!-- Quick Actions -->
+                    <div class="bg-white rounded-lg shadow">
+                        <div class="p-6 border-b border-gray-200">
+                            <h2 class="text-lg font-semibold text-dark">Thao tác nhanh</h2>
+                        </div>
+                        <div class="p-6">
+                            <div class="space-y-3">
+                                <button class="w-full flex items-center justify-between p-3 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-plus-circle fa-lg mr-3"></i>
+                                        <span>Thêm sản phẩm mới</span>
+                                    </div>
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                                <button class="w-full flex items-center justify-between p-3 bg-green-50 text-green-600 rounded-lg hover:bg-green-100 transition">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-truck fa-lg mr-3"></i>
+                                        <span>Nhập hàng mới</span>
+                                    </div>
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                                <button class="w-full flex items-center justify-between p-3 bg-purple-50 text-purple-600 rounded-lg hover:bg-purple-100 transition">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-file-export fa-lg mr-3"></i>
+                                        <span>Xuất kho</span>
+                                    </div>
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                                <button class="w-full flex items-center justify-between p-3 bg-yellow-50 text-yellow-600 rounded-lg hover:bg-yellow-100 transition">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-exclamation-triangle fa-lg mr-3"></i>
+                                        <span>Sản phẩm sắp hết</span>
+                                    </div>
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                                <button class="w-full flex items-center justify-between p-3 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-times-circle fa-lg mr-3"></i>
+                                        <span>Sản phẩm hết hàng</span>
+                                    </div>
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Inventory Statistics -->
+                    <div class="bg-white rounded-lg shadow">
+                        <div class="p-6 border-b border-gray-200">
+                            <h2 class="text-lg font-semibold text-dark">Thống kê kho hàng</h2>
+                        </div>
+                        <div class="p-6">
+                            <div class="mb-4">
+                                <h3 class="text-sm font-medium text-gray-500 mb-2">Phân bổ theo danh mục</h3>
+                                <div class="chart-container">
+                                    <!-- Placeholder for chart - would be replaced with actual chart in JS -->
+                                    <div class="w-full h-full flex items-center justify-center bg-gray-100 rounded">
+                                        <div class="text-center">
+                                            <i class="fas fa-chart-pie text-4xl text-gray-400 mb-2"></i>
+                                            <p class="text-gray-500">Biểu đồ phân bổ</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <h3 class="text-sm font-medium text-gray-500 mb-2">Sản phẩm bán chạy</h3>
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center">
+                                            <div class="w-2 h-2 rounded-full bg-blue-500 mr-2"></div>
+                                            <span class="text-sm">Coca-Cola lon</span>
+                                        </div>
+                                        <span class="text-sm font-medium">128 lượt</span>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center">
+                                            <div class="w-2 h-2 rounded-full bg-green-500 mr-2"></div>
+                                            <span class="text-sm">Mì tôm Hảo Hảo</span>
+                                        </div>
+                                        <span class="text-sm font-medium">85 lượt</span>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center">
+                                            <div class="w-2 h-2 rounded-full bg-purple-500 mr-2"></div>
+                                            <span class="text-sm">Pepsi chai</span>
+                                        </div>
+                                        <span class="text-sm font-medium">76 lượt</span>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center">
+                                            <div class="w-2 h-2 rounded-full bg-red-500 mr-2"></div>
+                                            <span class="text-sm">Bánh mì pate</span>
+                                        </div>
+                                        <span class="text-sm font-medium">52 lượt</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Inventory Activities -->
+            <div class="bg-white rounded-lg shadow mb-6">
+                <div class="flex items-center justify-between p-6 border-b border-gray-200">
+                    <h2 class="text-lg font-semibold text-dark">Hoạt động gần đây</h2>
+                    <select class="text-sm border border-gray-300 rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent">
+                        <option>Hôm nay</option>
+                        <option>7 ngày gần đây</option>
+                        <option>30 ngày gần đây</option>
+                    </select>
+                </div>
+                <div class="p-6">
+                    <div class="space-y-4">
+                        <div class="flex items-start">
+                            <div class="p-2 rounded-full bg-blue-100 text-blue-600 mr-4">
+                                <i class="fas fa-plus"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex justify-between">
+                                    <p class="text-sm font-medium text-gray-900">Nhập hàng mới</p>
+                                    <span class="text-xs text-gray-500">10 phút trước</span>
+                                </div>
+                                <p class="text-sm text-gray-500">Đã thêm 50 chai Pepsi vào kho với giá nhập 7,500đ/chai</p>
+                                <p class="text-xs text-gray-500 mt-1">Bởi: Nguyen Van A</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="p-2 rounded-full bg-green-100 text-green-600 mr-4">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex justify-between">
+                                    <p class="text-sm font-medium text-gray-900">Xuất kho</p>
+                                    <span class="text-xs text-gray-500">2 giờ trước</span>
+                                </div>
+                                <p class="text-sm text-gray-500">Xuất 10 lon Coca-Cola cho quầy bar với giá bán 15,000đ/lon</p>
+                                <p class="text-xs text-gray-500 mt-1">Bởi: Tran Thi B</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="p-2 rounded-full bg-red-100 text-red-600 mr-4">
+                                <i class="fas fa-times"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex justify-between">
+                                    <p class="text-sm font-medium text-gray-900">Hủy đơn nhập</p>
+                                    <span class="text-xs text-gray-500">5 giờ trước</span>
+                                </div>
+                                <p class="text-sm text-gray-500">Hủy đơn nhập 20 bàn phím do nhà cung cấp báo hết hàng</p>
+                                <p class="text-xs text-gray-500 mt-1">Bởi: Pham Van C</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <div class="p-2 rounded-full bg-yellow-100 text-yellow-600 mr-4">
+                                <i class="fas fa-exclamation"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex justify-between">
+                                    <p class="text-sm font-medium text-gray-900">Cảnh báo tồn kho</p>
+                                    <span class="text-xs text-gray-500">1 ngày trước</span>
+                                </div>
+                                <p class="text-sm text-gray-500">Bánh mì pate chỉ còn 5 sản phẩm trong kho</p>
+                                <p class="text-xs text-gray-500 mt-1">Hệ thống</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-center">
+                        <button class="text-sm text-primary font-medium">Xem tất cả hoạt động <i class="fas fa-arrow-right ml-1"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Supplier Information -->
+            <div class="bg-white rounded-lg shadow">
+                <div class="p-6 border-b border-gray-200">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-lg font-semibold text-dark">Nhà cung cấp</h2>
+                        <button class="text-sm bg-primary text-white px-3 py-1 rounded hover:bg-indigo-700 flex items-center">
+                            <i class="fas fa-plus mr-1"></i> Thêm mới
+                        </button>
+                    </div>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="border border-gray-200 rounded-lg p-4 hover:border-primary transition">
+                            <div class="flex items-center mb-3">
+                                <div class="h-10 w-10 rounded-full bg-purple-100 text-purple-600 flex items-center justify-center mr-3">
+                                    <i class="fas fa-building"></i>
+                                </div>
+                                <h3 class="text-lg font-medium text-dark">Công ty TNHH Nước giải khát Việt</h3>
+                            </div>
+                            <div class="space-y-2 text-sm text-gray-600">
+                                <p><span class="font-medium">Liên hệ:</span> Lê Văn D - 0987654321</p>
+                                <p><span class="font-medium">Mặt hàng:</span> Đồ uống</p>
+                                <p><span class="font-medium">Hợp đồng:</span> HD-2023-001</p>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-gray-200 flex justify-between">
+                                <button class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded hover:bg-blue-200">Chỉnh sửa</button>
+                                <button class="text-xs bg-green-100 text-green-600 px-2 py-1 rounded hover:bg-green-200">Liên hệ</button>
+                            </div>
+                        </div>
+                        <div class="border border-gray-200 rounded-lg p-4 hover:border-primary transition">
+                            <div class="flex items-center mb-3">
+                                <div class="h-10 w-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mr-3">
+                                    <i class="fas fa-industry"></i>
+                                </div>
+                                <h3 class="text-lg font-medium text-dark">Xưởng sản xuất bánh mì Tây Hồ</h3>
+                            </div>
+                            <div class="space-y-2 text-sm text-gray-600">
+                                <p><span class="font-medium">Liên hệ:</span> Ngô Thị E - 0961234567</p>
+                                <p><span class="font-medium">Mặt hàng:</span> Đồ ăn nhanh</p>
+                                <p><span class="font-medium">Hợp đồng:</span> HD-2023-002</p>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-gray-200 flex justify-between">
+                                <button class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded hover:bg-blue-200">Chỉnh sửa</button>
+                                <button class="text-xs bg-green-100 text-green-600 px-2 py-1 rounded hover:bg-green-200">Liên hệ</button>
+                            </div>
+                        </div>
+                        <div class="border border-gray-200 rounded-lg p-4 hover:border-primary transition">
+                            <div class="flex items-center mb-3">
+                                <div class="h-10 w-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center mr-3">
+                                    <i class="fas fa-cubes"></i>
+                                </div>
+                                <h3 class="text-lg font-medium text-dark">Công ty Phân phối linh kiện TechOne</h3>
+                            </div>
+                            <div class="space-y-2 text-sm text-gray-600">
+                                <p><span class="font-medium">Liên hệ:</span> Vũ Văn F - 0912345678</p>
+                                <p><span class="font-medium">Mặt hàng:</span> Linh kiện</p>
+                                <p><span class="font-medium">Hợp đồng:</span> HD-2023-003</p>
+                            </div>
+                            <div class="mt-4 pt-3 border-t border-gray-200 flex justify-between">
+                                <button class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded hover:bg-blue-200">Chỉnh sửa</button>
+                                <button class="text-xs bg-green-100 text-green-600 px-2 py-1 rounded hover:bg-green-200">Liên hệ</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle sidebar
+        document.getElementById('sidebarToggle').addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('collapsed');
+        });
+        // Initialize tooltips
+        function initTooltips() {
+            // This would be replaced with actual tooltip initialization code
+            console.log('Tooltips initialized');
+        }
+        // Simulate chart data
+        const inventoryCategories = ['Đồ uống', 'Đồ ăn nhanh', 'Linh kiện', 'Khác'];
+        const categoryCounts = [75, 28, 15, 10];
+        // Initialize charts
+        function initCharts() {
+            console.log('Initializing charts with data:', { inventoryCategories, categoryCounts });
+            // This would be replaced with actual chart initialization code (Chart.js, etc.)
+        }
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initTooltips();
+            initCharts();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Khách Hàng - CyberAdmin Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4f46e5',
+                        secondary: '#10b981',
+                        dark: '#1e293b',
+                        light: '#f8fafc'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom styles */
+        .sidebar {
+            transition: all 0.3s ease;
+        }
+        .sidebar.collapsed {
+            width: 80px;
+        }
+        .sidebar.collapsed .nav-text {
+            display: none;
+        }
+        .sidebar.collapsed .logo-text {
+            display: none;
+        }
+        .sidebar.collapsed .nav-link {
+            justify-content: center;
+        }
+        .sidebar.collapsed ~ .main-content {
+            margin-left: 80px;
+        }
+        .main-content {
+            transition: all 0.3s ease;
+            margin-left: 250px;
+            min-height: 100vh;
+        }
+        .customer-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        .membership-vip {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+        .membership-premium {
+            background: linear-gradient(135deg, #f5f7fa 0%, #f6d365 100%);
+        }
+        .membership-standard {
+            background: linear-gradient(135deg, #f5f7fa 0%, #a1c4fd 100%);
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Sidebar -->
+    <div class="sidebar fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-50">
+        <div class="flex items-center justify-center h-16 border-b border-gray-200">
+            <div class="flex items-center space-x-3">
+                <i class="fas fa-gamepad text-2xl text-primary"></i>
+                <span class="logo-text text-xl font-bold text-dark">CyberAdmin Pro</span>
+            </div>
+        </div>
+        <div class="py-4 px-2 overflow-y-auto">
+            <ul class="space-y-2">
+                <li>
+                    <a href="index.html" class="nav-link flex items-center p-3 text-gray-700 rounded-lg hover:bg-gray-100">
+                        <i class="fas fa-tachometer-alt fa-fw"></i>
+                        <span class="nav-text ml-3">Tổng quan</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="computers.html" class="nav-link flex items-center p-3 text-gray-700 rounded-lg hover:bg-gray-100">
+                        <i class="fas fa-desktop fa-fw"></i>
+                        <span class="nav-text ml-3">Quản lý máy trạm</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="customers.html" class="nav-link flex items-center p-3 bg-primary text-white rounded-lg">
+                        <i class="fas fa-users fa-fw"></i>
+                        <span class="nav-text ml-3">Quản lý khách hàng</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="orders.html" class="nav-link flex items-center p-3 text-gray-700 rounded-lg hover:bg-gray-100">
+                        <i class="fas fa-utensils fa-fw"></i>
+                        <span class="nav-text ml-3">Thực đơn & Đặt hàng</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="inventory.html" class="nav-link flex items-center p-3 text-gray-700 rounded-lg hover:bg-gray-100">
+                        <i class="fas fa-warehouse fa-fw"></i>
+                        <span class="nav-text ml-3">Quản lý kho</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="staff.html" class="nav-link flex items-center p-3 text-gray-700 rounded-lg hover:bg-gray-100">
+                        <i class="fas fa-user-tie fa-fw"></i>
+                        <span class="nav-text ml-3">Nhân viên</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="reports.html" class="nav-link flex items-center p-3 text-gray-700 rounded-lg hover:bg-gray-100">
+                        <i class="fas fa-chart-line fa-fw"></i>
+                        <span class="nav-text ml-3">Thống kê & Báo cáo</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="settings.html" class="nav-link flex items-center p-3 text-gray-700 rounded-lg hover:bg-gray-100">
+                        <i class="fas fa-cog fa-fw"></i>
+                        <span class="nav-text ml-3">Cài đặt hệ thống</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Navigation -->
+        <header class="bg-white shadow-sm">
+            <div class="flex justify-between items-center px-6 py-4">
+                <div class="flex items-center space-x-4">
+                    <button id="sidebarToggle" class="text-gray-600 hover:text-primary focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <h1 class="text-xl font-semibold text-dark">Quản lý khách hàng</h1>
+                </div>
+                <div class="flex items-center space-x-6">
+                    <div class="relative">
+                        <button class="text-gray-500 hover:text-primary focus:outline-none">
+                            <i class="fas fa-bell fa-lg"></i>
+                            <span class="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500"></span>
+                        </button>
+                    </div>
+                    <div class="relative">
+                        <button class="text-gray-500 hover:text-primary focus:outline-none">
+                            <i class="fas fa-envelope fa-lg"></i>
+                            <span class="absolute top-0 right-0 h-2 w-2 rounded-full bg-secondary"></span>
+                        </button>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <div class="h-8 w-8 rounded-full bg-primary flex items-center justify-center text-white">
+                            <span>AD</span>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-dark">Admin Quản Trị</p>
+                            <p class="text-xs text-gray-500">Quản lý cấp cao</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Management Content -->
+        <div class="p-6">
+            <!-- Customer Summary Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                <div class="bg-white rounded-lg shadow p-6 hover:shadow-md transition">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-blue-100 text-blue-600">
+                            <i class="fas fa-users fa-lg"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-500">Tổng số khách hàng</p>
+                            <p class="text-2xl font-semibold text-dark">243</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow p-6 hover:shadow-md transition">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-green-100 text-green-600">
+                            <i class="fas fa-crown fa-lg"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-500">Khách VIP</p>
+                            <p class="text-2xl font-semibold text-dark">42</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow p-6 hover:shadow-md transition">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-purple-100 text-purple-600">
+                            <i class="fas fa-clock fa-lg"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-500">Khách đang chơi</p>
+                            <p class="text-2xl font-semibold text-dark">18</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow p-6 hover:shadow-md transition">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-yellow-100 text-yellow-600">
+                            <i class="fas fa-chart-line fa-lg"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm font-medium text-gray-500">Doanh thu tháng</p>
+                            <p class="text-2xl font-semibold text-dark">85.2tr</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Customer Management -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                <!-- Customer List -->
+                <div class="lg:col-span-2 bg-white rounded-lg shadow">
+                    <div class="flex items-center justify-between p-6 border-b border-gray-200">
+                        <h2 class="text-lg font-semibold text-dark">Danh sách khách hàng</h2>
+                        <div class="flex space-x-2">
+                            <button class="text-sm bg-primary text-white px-3 py-1 rounded hover:bg-indigo-700 flex items-center">
+                                <i class="fas fa-plus mr-1"></i> Thêm khách
+                            </button>
+                            <button class="text-sm border border-gray-300 text-gray-600 px-3 py-1 rounded hover:bg-gray-50 flex items-center">
+                                <i class="fas fa-filter mr-1"></i> Lọc
+                            </button>
+                            <button class="text-sm border border-gray-300 text-gray-600 px-3 py-1 rounded hover:bg-gray-50 flex items-center">
+                                <i class="fas fa-search mr-1"></i> Tìm kiếm
+                            </button>
+                        </div>
+                    </div>
+                    <div class="p-6 overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tên khách</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hạng</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">SDT</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tổng chi tiêu</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tác vụ</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr class="customer-card hover:bg-gray-50 cursor-pointer">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">KH001</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-10 w-10">
+                                                <img class="h-10 w-10 rounded-full" src="https://randomuser.me/api/portraits/men/1.jpg" alt="">
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-gray-900">Nguyễn Văn A</div>
+                                                <div class="text-sm text-gray-500">Nguyenvana@example.com</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-white">VIP</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">0987654321</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">12.4tr</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <button class="text-indigo-600 hover:text-indigo-900 mr-3"><i class="fas fa-eye"></i></button>
+                                        <button class="text-yellow-600 hover:text-yellow-900 mr-3"><i class="fas fa-edit"></i></button>
+                                        <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr class="customer-card hover:bg-gray-50 cursor-pointer">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">KH002</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-10 w-10">
+                                                <img class="h-10 w-10 rounded-full" src="https://randomuser.me/api/portraits/women/2.jpg" alt="">
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-gray-900">Trần Thị B</div>
+                                                <div class="text-sm text-gray-500">tranthib@example.com</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gradient-to-r from-purple-400 to-purple-600 text-white">Premium</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">0912345678</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">8.7tr</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <button class="text-indigo-600 hover:text-indigo-900 mr-3"><i class="fas fa-eye"></i></button>
+                                        <button class="text-yellow-600 hover:text-yellow-900 mr-3"><i class="fas fa-edit"></i></button>
+                                        <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr class="customer-card hover:bg-gray-50 cursor-pointer">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">KH003</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-10 w-10">
+                                                <img class="h-10 w-10 rounded-full" src="https://randomuser.me/api/portraits/men/3.jpg" alt="">
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-gray-900">Lê Văn C</div>
+                                                <div class="text-sm text-gray-500">levanc@example.com</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gradient-to-r from-blue-400 to-blue-600 text-white">Standard</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">0978123456</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">3.2tr</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <button class="text-indigo-600 hover:text-indigo-900 mr-3"><i class="fas fa-eye"></i></button>
+                                        <button class="text-yellow-600 hover:text-yellow-900 mr-3"><i class="fas fa-edit"></i></button>
+                                        <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr class="customer-card hover:bg-gray-50 cursor-pointer">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">KH004</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-10 w-10">
+                                                <img class="h-10 w-10 rounded-full" src="https://randomuser.me/api/portraits/women/4.jpg" alt="">
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-gray-900">Phạm Thị D</div>
+                                                <div class="text-sm text-gray-500">phamthid@example.com</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gradient-to-r from-yellow-400 to-yellow-600 text-white">VIP</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">0967890123</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">15.8tr</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <button class="text-indigo-600 hover:text-indigo-900 mr-3"><i class="fas fa-eye"></i></button>
+                                        <button class="text-yellow-600 hover:text-yellow-900 mr-3"><i class="fas fa-edit"></i></button>
+                                        <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr class="customer-card hover:bg-gray-50 cursor-pointer">
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">KH005</td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-10 w-10">
+                                                <img class="h-10 w-10 rounded-full" src="https://randomuser.me/api/portraits/men/5.jpg" alt="">
+                                            </div>
+                                            <div class="ml-4">
+                                                <div class="text-sm font-medium text-gray-900">Hoàng Văn E</div>
+                                                <div class="text-sm text-gray-500">hoangve@example.com</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-gradient-to-r from-blue-400 to-blue-600 text-white">Standard</span>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">0945678901</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">2.5tr</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <button class="text-indigo-600 hover:text-indigo-900 mr-3"><i class="fas fa-eye"></i></button>
+                                        <button class="text-yellow-600 hover:text-yellow-900 mr-3"><i class="fas fa-edit"></i></button>
+                                        <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Pagination -->
+                    <div class="px-6 py-3 flex items-center justify-between border-t border-gray-200">
+                        <div class="flex-1 flex justify-between sm:hidden">
+                            <a href="#" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> Previous </a>
+                            <a href="#" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"> Next </a>
+                        </div>
+                        <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
+                            <div>
+                                <p class="text-sm text-gray-700">
+                                    Showing <span class="font-medium">1</span> to <span class="font-medium">5</span> of <span class="font-medium">243</span> customers
+                                </p>
+                            </div>
+                            <div>
+                                <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                                    <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                        <span class="sr-only">Previous</span>
+                                        <i class="fas fa-chevron-left"></i>
+                                    </a>
+                                    <a href="#" aria-current="page" class="z-10 bg-indigo-50 border-primary text-primary relative inline-flex items-center px-4 py-2 border text-sm font-medium"> 1 </a>
+                                    <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"> 2 </a>
+                                    <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font-medium"> 3 </a>
+                                    <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700"> ... </span>
+                                    <a href="#" class="bg-white border-gray-300 text-gray-500 hover:bg-gray-50 relative inline-flex items-center px-4 py-2 border text-sm font medium"> 49 </a>
+                                    <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                        <span class="sr-only">Next</span>
+                                        <i class="fas fa-chevron-right"></i>
+                                    </a>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Customer Control Panel -->
+                <div class="space-y-6">
+                    <!-- Customer Details -->
+                    <div class="bg-white rounded-lg shadow">
+                        <div class="p-6 border-b border-gray-200">
+                            <h2 class="text-lg font-semibold text-dark">Chi tiết khách hàng</h2>
+                        </div>
+                        <div class="p-6 space-y-4">
+                            <div class="flex flex-col items-center text-center">
+                                <img class="h-24 w-24 rounded-full mb-3" src="https://randomuser.me/api/portraits/men/1.jpg" alt="">
+                                <h3 class="text-lg font-semibold text-dark">Nguyễn Văn A</h3>
+                                <span class="px-3 py-1 rounded-full text-sm font-medium bg-gradient-to-r from-yellow-400 to-yellow-600 text-white">VIP</span>
+                                <p class="text-sm text-gray-500 mt-1">KH001</p>
+                            </div>
+                            <div class="space-y-3">
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Email:</span>
+                                    <span class="text-sm font-medium">nguyenvana@example.com</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">SĐT:</span>
+                                    <span class="text-sm font-medium">0987654321</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Ngày sinh:</span>
+                                    <span class="text-sm font-medium">15/03/1995</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Ngày đăng ký:</span>
+                                    <span class="text-sm font-medium">12/02/2022</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Tổng chi tiêu:</span>
+                                    <span class="text-sm font-medium">12,400,000đ</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-sm text-gray-600">Số lần đến:</span>
+                                    <span class="text-sm font-medium">68</span>
+                                </div>
+                                <div class="pt-3 border-t border-gray-200">
+                                    <p class="text-sm text-gray-600 mb-2">Ghi chú:</p>
+                                    <p class="text-sm italic">Khách hàng VIP, thích chơi game Valorant và LOL</p>
+                                </div>
+                            </div>
+                            <button class="w-full bg-primary text-white py-2 rounded hover:bg-indigo-700 mt-4">
+                                Chỉnh sửa thông tin
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Customer Activity -->
+                    <div class="bg-white rounded-lg shadow">
+                        <div class="p-6 border-b border-gray-200">
+                            <h2 class="text-lg font-semibold text-dark">Hoạt động gần đây</h2>
+                        </div>
+                        <div class="p-6">
+                            <div class="space-y-4">
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 bg-green-100 text-green-600 p-2 rounded-full">
+                                        <i class="fas fa-gamepad"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm font-medium text-gray-900">Chơi game Valorant</p>
+                                        <p class="text-sm text-gray-500">Máy A1 - 3 giờ - 150,000đ</p>
+                                        <p class="text-xs text-gray-400">Hôm nay, 14:30</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 bg-blue-100 text-blue-600 p-2 rounded-full">
+                                        <i class="fas fa-coffee"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm font-medium text-gray-900">Đặt đồ uống</p>
+                                        <p class="text-sm text-gray-500">Trà đào - 2 ly - 60,000đ</p>
+                                        <p class="text-xs text-gray-400">Hôm nay, 16:45</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-start">
+                                    <div class="flex-shrink-0 bg-purple-100 text-purple-600 p-2 rounded-full">
+                                        <i class="fas fa-clock"></i>
+                                    </div>
+                                    <div class="ml-3">
+                                        <p class="text-sm font-medium text-gray-900">Đặt chỗ trước</p>
+                                        <p class="text-sm text-gray-500">Máy B3 - 4 giờ - 200,000đ</p>
+                                        <p class="text-xs text-gray-400">Ngày mai, 19:00</p>
+                                    </div>
+                                </div>
+                                <div class="pt-3 border-t border-gray-200 text-center">
+                                    <button class="text-sm text-primary hover:text-indigo-700">
+                                        Xem tất cả hoạt động
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="bg-white rounded-lg shadow">
+                        <div class="p-6 border-b border-gray-200">
+                            <h2 class="text-lg font-semibold text-dark">Thao tác nhanh</h2>
+                        </div>
+                        <div class="p-6 grid grid-cols-2 gap-2">
+                            <button class="bg-blue-100 text-blue-600 p-3 rounded hover:bg-blue-200 transition flex flex-col items-center">
+                                <i class="fas fa-gamepad fa-lg mb-1"></i>
+                                <span class="text-xs">Đặt máy</span>
+                            </button>
+                            <button class="bg-green-100 text-green-600 p-3 rounded hover:bg-green-200 transition flex flex-col items-center">
+                                <i class="fas fa-utensils fa-lg mb-1"></i>
+                                <span class="text-xs">Đặt đồ ăn</span>
+                            </button>
+                            <button class="bg-yellow-100 text-yellow-600 p-3 rounded hover:bg-yellow-200 transition flex flex-col items-center">
+                                <i class="fas fa-ticket-alt fa-lg mb-1"></i>
+                                <span class="text-xs">Tạo voucher</span>
+                            </button>
+                            <button class="bg-purple-100 text-purple-600 p-3 rounded hover:bg-purple-200 transition flex flex-col items-center">
+                                <i class="fas fa-comment-dollar fa-lg mb-1"></i>
+                                <span class="text-xs">Nạp tiền</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Membership Statistics -->
+            <div class="bg-white rounded-lg shadow mb-6">
+                <div class="p-6 border-b border-gray-200">
+                    <h2 class="text-lg font-semibold text-dark">Thống kê hạng thành viên</h2>
+                </div>
+                <div class="p-6">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- VIP Members -->
+                        <div class="membership-vip rounded-lg p-6 text-center">
+                            <div class="mx-auto h-16 w-16 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-600 flex items-center justify-center text-white mb-3">
+                                <i class="fas fa-crown fa-lg"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold mb-2">VIP</h3>
+                            <p class="text-sm text-gray-600 mb-4">Chi tiêu trên 10 triệu</p>
+                            <div class="bg-white rounded-lg p-3 shadow-inner">
+                                <p class="text-3xl font-bold">42</p>
+                                <p class="text-xs text-gray-500">Khách hàng</p>
+                            </div>
+                            <div class="mt-4 space-y-2">
+                                <div class="flex justify-between text-xs">
+                                    <span>Doanh thu:</span>
+                                    <span class="font-medium">56.4tr</span>
+                                </div>
+                                <div class="flex justify-between text-xs">
+                                    <span>Tỉ lệ:</span>
+                                    <span class="font-medium">17.3%</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Premium Members -->
+                        <div class="membership-premium rounded-lg p-6 text-center">
+                            <div class="mx-auto h-16 w-16 rounded-full bg-gradient-to-r from-purple-400 to-purple-600 flex items-center justify-center text-white mb-3">
+                                <i class="fas fa-star fa-lg"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold mb-2">Premium</h3>
+                            <p class="text-sm text-gray-600 mb-4">Chi tiêu 5-10 triệu</p>
+                            <div class="bg-white rounded-lg p-3 shadow-inner">
+                                <p class="text-3xl font-bold">73</p>
+                                <p class="text-xs text-gray-500">Khách hàng</p>
+                            </div>
+                            <div class="mt-4 space-y-2">
+                                <div class="flex justify-between text-xs">
+                                    <span>Doanh thu:</span>
+                                    <span class="font-medium">38.7tr</span>
+                                </div>
+                                <div class="flex justify-between text-xs">
+                                    <span>Tỉ lệ:</span>
+                                    <span class="font-medium">30.0%</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Standard Members -->
+                        <div class="membership-standard rounded-lg p-6 text-center">
+                            <div class="mx-auto h-16 w-16 rounded-full bg-gradient-to-r from-blue-400 to-blue-600 flex items-center justify-center text-white mb-3">
+                                <i class="fas fa-user fa-lg"></i>
+                            </div>
+                            <h3 class="text-lg font-semibold mb-2">Standard</h3>
+                            <p class="text-sm text-gray-600 mb-4">Chi tiêu dưới 5 triệu</p>
+                            <div class="bg-white rounded-lg p-3 shadow-inner">
+                                <p class="text-3xl font-bold">128</p>
+                                <p class="text-xs text-gray-500">Khách hàng</p>
+                            </div>
+                            <div class="mt-4 space-y-2">
+                                <div class="flex justify-between text-xs">
+                                    <span>Doanh thu:</span>
+                                    <span class="font-medium">19.8tr</span>
+                                </div>
+                                <div class="flex justify-between text-xs">
+                                    <span>Tỉ lệ:</span>
+                                    <span class="font-medium">52.7%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Transactions -->
+            <div class="bg-white rounded-lg shadow">
+                <div class="p-6 border-b border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <h2 class="text-lg font-semibold text-dark">Giao dịch gần đây</h2>
+                        <button class="text-sm text-primary hover:text-indigo-700">
+                            Xem tất cả
+                        </button>
+                    </div>
+                </div>
+                <div class="p-6 overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Mã GD</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Khách hàng</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Loại</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Máy</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Thời gian</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Số tiền</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trạng thái</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">GD001245</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-8 w-8">
+                                            <img class="h-8 w-8 rounded-full" src="https://randomuser.me/api/portraits/men/1.jpg" alt="">
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900">Nguyễn Văn A</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-gamepad text-purple-500 mr-2"></i>
+                                        <span>Chơi game</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">A1</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">3 giờ</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">150,000đ</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Hoàn thành</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">GD001244</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-8 w-8">
+                                            <img class="h-8 w-8 rounded-full" src="https://randomuser.me/api/portraits/women/2.jpg" alt="">
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900">Trần Thị B</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-coffee text-yellow-500 mr-2"></i>
+                                        <span>Đồ uống</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">B2</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">-</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">60,000đ</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Hoàn thành</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">GD001243</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-8 w-8">
+                                            <img class="h-8 w-8 rounded-full" src="https://randomuser.me/api/portraits/men/5.jpg" alt="">
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900">Hoàng Văn E</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-comment-dollar text-blue-500 mr-2"></i>
+                                        <span>Nạp tiền</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">-</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">-</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">500,000đ</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Hoàn thành</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">GD001242</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="flex-shrink-0 h-8 w-8">
+                                            <img class="h-8 w-8 rounded-full" src="https://randomuser.me/api/portraits/women/4.jpg" alt="">
+                                        </div>
+                                        <div class="ml-4">
+                                            <div class="text-sm font-medium text-gray-900">Phạm Thị D</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-clock text-purple-500 mr-2"></i>
+                                        <span>Đặt trước</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">B3</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">4 giờ</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">200,000đ</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">Chờ xác nhận</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle sidebar
+        document.getElementById('sidebarToggle').addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('collapsed');
+        });
+
+        // Customer card selection
+        document.querySelectorAll('.customer-card').forEach(card => {
+            card.addEventListener('click', function() {
+                // Remove previously selected styles
+                document.querySelectorAll('.customer-card').forEach(c => {
+                    c.classList.remove('bg-blue-50');
+                });
+                
+                // Add selected style to clicked card
+                this.classList.add('bg-blue-50');
+            });
+        });
+
+        // Initialize tooltips
+        function initTooltips() {
+            // This would be replaced with actual tooltip initialization code
+            console.log('Tooltips initialized');
+        }
+
+        // Init when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initTooltips();
+        });
+    </script>
+</body>
+</html>

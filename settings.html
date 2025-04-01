@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cài đặt hệ thống - CyberAdmin Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#4f46e5',
+                        secondary: '#10b981',
+                        dark: '#1e293b',
+                        light: '#f8fafc'
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom styles */
+        .sidebar {
+            transition: all 0.3s ease;
+        }
+        .sidebar.collapsed {
+            width: 80px;
+        }
+        .sidebar.collapsed .nav-text {
+            display: none;
+        }
+        .sidebar.collapsed .logo-text {
+            display: none;
+        }
+        .sidebar.collapsed .nav-link {
+            justify-content: center;
+        }
+        .sidebar.collapsed ~ .main-content {
+            margin-left: 80px;
+        }
+        .main-content {
+            transition: all 0.3s ease;
+            margin-left: 250px;
+            min-height: 100vh;
+        }
+        .setting-card {
+            transition: all 0.2s ease;
+        }
+        .setting-card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .tab-active {
+            border-bottom: 2px solid #4f46e5;
+            color: #4f46e5;
+            font-weight: 600;
+        }
+        /* Toggle switch styling */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        input:checked + .slider {
+            background-color: #4f46e5;
+        }
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <!-- Sidebar -->
+    <div class="sidebar fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-50">
+        <div class="flex items-center justify-center h-16 border-b border-gray-200">
+            <div class="flex items-center space-x-3">
+                <i class="fas fa-gamepad text-2xl text-primary"></i>
+                <span class="logo-text text-xl font-bold text-dark">CyberAdmin Pro</span>
+            </div>
+        </div>
+        <div class="py-4 px-2 overflow-y-auto">
+            <ul class="space-y-2">
+                <li>
+                    <a href="index.html" class="nav-link flex items-center p-3 text-gray-700 rounded-lg hover:bg-gray-100">
+                        <i class="fas fa-tachometer-alt fa-fw"></i>
+                        <span class="nav-text ml-3">Tổng quan</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="computers.html" class="nav-link flex items-center p-3 text-gray-700 rounded-lg hover:bg-gray-100">
+                        <i class="fas fa-desktop fa-fw"></i>
+                        <span class="nav-text ml-3">Quản lý máy trạm</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="customers.html" class="nav-link flex items-center p-3 text-gray-700 rounded-lg hover:bg-gray-100">
+                        <i class="fas fa-users fa-fw"></i>
+                        <span class="nav-text ml-3">Quản lý khách hàng</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="orders.html" class="nav-link flex items-center p-3 text-gray-700 rounded-lg hover:bg-gray-100">
+                        <i class="fas fa-utensils fa-fw"></i>
+                        <span class="nav-text ml-3">Thực đơn & Đặt hàng</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="inventory.html" class="nav-link flex items-center p-3 text-gray-700 rounded-lg hover:bg-gray-100">
+                        <i class="fas fa-warehouse fa-fw"></i>
+                        <span class="nav-text ml-3">Quản lý kho</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="staff.html" class="nav-link flex items-center p-3 text-gray-700 rounded-lg hover:bg-gray-100">
+                        <i class="fas fa-user-tie fa-fw"></i>
+                        <span class="nav-text ml-3">Nhân viên</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="reports.html" class="nav-link flex items-center p-3 text-gray-700 rounded-lg hover:bg-gray-100">
+                        <i class="fas fa-chart-line fa-fw"></i>
+                        <span class="nav-text ml-3">Thống kê & Báo cáo</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="settings.html" class="nav-link flex items-center p-3 bg-primary text-white rounded-lg">
+                        <i class="fas fa-cog fa-fw"></i>
+                        <span class="nav-text ml-3">Cài đặt hệ thống</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Navigation -->
+        <header class="bg-white shadow-sm">
+            <div class="flex justify-between items-center px-6 py-4">
+                <div class="flex items-center space-x-4">
+                    <button id="sidebarToggle" class="text-gray-600 hover:text-primary focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <h1 class="text-xl font-semibold text-dark">Cài đặt hệ thống</h1>
+                </div>
+                <div class="flex items-center space-x-6">
+                    <div class="relative">
+                        <button class="text-gray-500 hover:text-primary focus:outline-none">
+                            <i class="fas fa-bell fa-lg"></i>
+                            <span class="absolute top-0 right-0 h-2 w-2 rounded-full bg-red-500"></span>
+                        </button>
+                    </div>
+                    <div class="relative">
+                        <button class="text-gray-500 hover:text-primary focus:outline-none">
+                            <i class="fas fa-envelope fa-lg"></i>
+                            <span class="absolute top-0 right-0 h-2 w-2 rounded-full bg-secondary"></span>
+                        </button>
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <div class="h-8 w-8 rounded-full bg-primary flex items-center justify-center text-white">
+                            <span>AD</span>
+                        </div>
+                        <div>
+                            <p class="text-sm font-medium text-dark">Admin Quản Trị</p>
+                            <p class="text-xs text-gray-500">Quản lý cấp cao</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Settings Content -->
+        <div class="p-6">
+            <!-- Settings Navigation -->
+            <div class="flex border-b border-gray-200 mb-6">
+                <button class="tab-active py-4 px-6 text-sm font-medium">Cài đặt chung</button>
+                <button class="py-4 px-6 text-sm font-medium text-gray-500 hover:text-primary">Bảo mật</button>
+                <button class="py-4 px-6 text-sm font-medium text-gray-500 hover:text-primary">Thông báo</button>
+                <button class="py-4 px-6 text-sm font-medium text-gray-500 hover:text-primary">Giao diện</button>
+                <button class="py-4 px-6 text-sm font-medium text-gray-500 hover:text-primary">Phân quyền</button>
+                <button class="py-4 px-6 text-sm font-medium text-gray-500 hover:text-primary">Cấu hình API</button>
+            </div>
+
+            <!-- General Settings -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+                <!-- System Info -->
+                <div class="lg:col-span-2 bg-white rounded-lg shadow p-6 setting-card">
+                    <h2 class="text-lg font-semibold text-dark mb-4">Thông tin hệ thống</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Tên cyber</label>
+                            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary" value="Cyber Gaming Pro">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Địa chỉ</label>
+                            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary" value="123 Đường ABC, Quận 1, TP.HCM">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Số điện thoại</label>
+                            <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary" value="0901234567">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+                            <input type="email" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary" value="info@cybergamingpro.com">
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Mô tả cyber</label>
+                        <textarea class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary h-24">Cyber Gaming Pro là quán net cao cấp với hệ thống máy tính cấu hình mạnh, không gian thoáng mát, đầy đủ tiện nghi.</textarea>
+                    </div>
+                    <div class="flex justify-end mt-4">
+                        <button class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-primary focus:border-primary mr-3">
+                            Hủy bỏ
+                        </button>
+                        <button class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-indigo-700 focus:outline-none focus:ring-primary focus:border-primary">
+                            Lưu thay đổi
+                        </button>
+                    </div>
+                </div>
+
+                <!-- System Status -->
+                <div class="bg-white rounded-lg shadow p-6 setting-card">
+                    <h2 class="text-lg font-semibold text-dark mb-4">Trạng thái hệ thống</h2>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-sm font-medium">Phiên bản hệ thống</p>
+                                <p class="text-xs text-gray-500">CyberAdmin Pro v2.4.1</p>
+                            </div>
+                            <span class="text-xs px-2 py-1 rounded-full bg-green-100 text-green-800">Mới nhất</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-sm font-medium">Thời gian hoạt động</p>
+                                <p class="text-xs text-gray-500">12 ngày 7 giờ 32 phút</p>
+                            </div>
+                            <span class="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-800">Ổn định</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-sm font-medium">Tổng số nhân viên</p>
+                                <p class="text-xs text-gray-500">15 người đang hoạt động</p>
+                            </div>
+                            <a href="#" class="text-xs text-primary hover:underline">Xem chi tiết</a>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-sm font-medium">Tổng số máy tính</p>
+                                <p class="text-xs text-gray-500">50 máy (45 đang hoạt động)</p>
+                            </div>
+                            <a href="#" class="text-xs text-primary hover:underline">Xem chi tiết</a>
+                        </div>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-gray-200">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <label class="inline-flex items-center">
+                                    <span class="text-sm font-medium">Chế độ bảo trì</span>
+                                </label>
+                                <p class="text-xs text-gray-500">Tạm dừng toàn bộ hoạt động</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="flex justify-between items-center mt-4">
+                            <div>
+                                <label class="inline-flex items-center">
+                                    <span class="text-sm font-medium">Cho phép đăng ký mới</span>
+                                </label>
+                                <p class="text-xs text-gray-500">Khách hàng có thể tự đăng ký tài khoản</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="mt-6">
+                        <button class="w-full px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-primary focus:border-primary">
+                            <i class="fas fa-sync-alt mr-2"></i> Kiểm tra cập nhật
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Business Hours -->
+            <div class="bg-white rounded-lg shadow p-6 mb-6 setting-card">
+                <h2 class="text-lg font-semibold text-dark mb-4">Giờ hoạt động</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Giờ mở cửa</label>
+                        <input type="time" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary" value="08:00">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Giờ đóng cửa</label>
+                        <input type="time" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary" value="23:00">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Áp dụng cho</label>
+                        <select class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary">
+                            <option>Tất cả các ngày</option>
+                            <option>Thứ 2 - Thứ 6</option>
+                            <option>Thứ 7 - Chủ nhật</option>
+                            <option>Tùy chỉnh...</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="mt-6">
+                    <h3 class="text-sm font-medium text-gray-700 mb-2">Ngày đặc biệt</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full divide-y divide-gray-200">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ngày</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Giờ mở cửa</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Giờ đóng cửa</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ghi chú</th>
+                                    <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Tác vụ</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">01/01/2024</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">10:00</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">18:00</td>
+                                    <td class="px-6 py-4 text-sm text-gray-500">Tết Dương lịch</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <button class="text-indigo-600 hover:text-indigo-900 mr-3"><i class="fas fa-edit"></i></button>
+                                        <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">09/02/2024 - 14/02/2024</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">09:00</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">22:00</td>
+                                    <td class="px-6 py-4 text-sm text-gray-500">Tết Nguyên đán</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                        <button class="text-indigo-600 hover:text-indigo-900 mr-3"><i class="fas fa-edit"></i></button>
+                                        <button class="text-red-600 hover:text-red-900"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="mt-4">
+                        <button class="text-sm bg-primary text-white px-3 py-2 rounded hover:bg-indigo-700 flex items-center">
+                            <i class="fas fa-plus mr-2"></i> Thêm ngày đặc biệt
+                        </button>
+                    </div>
+                </div>
+                <div class="flex justify-end mt-6">
+                    <button class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-primary focus:border-primary mr-3">
+                        Hủy bỏ
+                    </button>
+                    <button class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-indigo-700 focus:outline-none focus:ring-primary focus:border-primary">
+                        Lưu thay đổi
+                    </button>
+                </div>
+            </div>
+
+            <!-- Pricing Settings -->
+            <div class="bg-white rounded-lg shadow p-6 mb-6 setting-card">
+                <h2 class="text-lg font-semibold text-dark mb-4">Cài đặt giá</h2>
+                <div class="space-y-6">
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-700 mb-2">Giá theo giờ</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-xs text-gray-500 mb-1">Giờ thường (08:00 - 17:00)</label>
+                                <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary" placeholder="20,000 ₫" value="20000">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-500 mb-1">Giờ cao điểm (17:00 - 22:00)</label>
+                                <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary" placeholder="25,000 ₫" value="25000">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-500 mb-1">Giờ đêm (22:00 - 08:00)</label>
+                                <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary" placeholder="15,000 ₫" value="15000">
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-700 mb-2">Khu vực VIP</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="block text-xs text-gray-500 mb-1">Giờ thường</label>
+                                <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary" placeholder="30,000 ₫" value="30000">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-500 mb-1">Giờ cao điểm</label>
+                                <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary" placeholder="35,000 ₫" value="35000">
+                            </div>
+                            <div>
+                                <label class="block text-xs text-gray-500 mb-1">Giờ đêm</label>
+                                <input type="number" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary" placeholder="25,000 ₫" value="25000">
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-700 mb-2">Chương trình khuyến mãi</h3>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-sm">Giảm giá cho khách hàng thân thiết</p>
+                                <p class="text-xs text-gray-500">Áp dụng cho khách hàng VIP</p>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="number" class="w-20 px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary" value="10" min="0" max="100"> 
+                                <span class="ml-2 text-sm">%</span>
+                            </div>
+                        </div>
+                        <div class="flex justify-between items-center mt-3">
+                            <div>
+                                <p class="text-sm">Giảm giá theo thời gian</p>
+                                <p class="text-xs text-gray-500">Áp dụng khi sử dụng trên 4 tiếng</p>
+                            </div>
+                            <div class="flex items-center">
+                                <input type="number" class="w-20 px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary" value="5" min="0" max="100"> 
+                                <span class="ml-2 text-sm">%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex justify-end">
+                        <button class="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-primary focus:border-primary mr-3">
+                            Hủy bỏ
+                        </button>
+                        <button class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary hover:bg-indigo-700 focus:outline-none focus:ring-primary focus:border-primary">
+                            Lưu thay đổi
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Advanced Settings -->
+            <div class="bg-white rounded-lg shadow p-6 setting-card">
+                <h2 class="text-lg font-semibold text-dark mb-4">Cài đặt nâng cao</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-700 mb-3">Sao lưu dữ liệu</h3>
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <p class="text-sm">Tự động sao lưu</p>
+                                <p class="text-xs text-gray-500">Hàng ngày vào lúc 02:00</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="mt-3">
+                            <p class="text-sm mb-2">Vị trí lưu trữ</p>
+                            <div class="flex">
+                                <input type="text" class="flex-1 px-3 py-2 border border-gray-300 rounded-l-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary" value="/backups">
+                                <button class="px-3 py-2 border border-l-0 border-gray-300 rounded-r-md bg-gray-100 text-sm font-medium text-gray-700 hover:bg-gray-200">
+                                    <i class="fas fa-folder-open"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <button class="w-full px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-primary focus:border-primary">
+                                <i class="fas fa-database mr-2"></i> Sao lưu ngay lập tức
+                            </button>
+                        </div>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-medium text-gray-700 mb-3">Khôi phục dữ liệu</h3>
+                        <div class="mt-2">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Chọn bản sao lưu</label>
+                            <select class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary">
+                                <option>backup_2023-11-15_0200.zip</option>
+                                <option>backup_2023-11-14_0200.zip</option>
+                                <option>backup_2023-11-13_0200.zip</option>
+                                <option>backup_2023-11-12_0200.zip</option>
+                            </select>
+                        </div>
+                        <div class="mt-4">
+                            <button class="w-full px-4 py-2 border border-red-300 rounded-md text-sm font-medium text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                                <i class="fas fa-undo mr-2"></i> Khôi phục từ bản sao lưu
+                            </button>
+                        </div>
+                        <div class="mt-4 border-t border-gray-200 pt-4">
+                            <button class="w-full px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                                <i class="fas fa-trash-alt mr-2"></i> Xóa toàn bộ dữ liệu
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-8 pt-6 border-t border-gray-200">
+                    <h3 class="text-sm font-medium text-gray-700 mb-3">Đặt lại hệ thống</h3>
+                    <div class="bg-red-50 border-l-4 border-red-400 p-4">
+                        <div class="flex">
+                            <div class="flex-shrink-0">
+                                <i class="fas fa-exclamation-triangle text-red-400"></i>
+                            </div>
+                            <div class="ml-3">
+                                <p class="text-sm text-red-700">
+                                    Cảnh báo: Thao tác này sẽ xóa toàn bộ cài đặt hiện tại và đưa hệ thống về trạng thái mặc định. Hãy chắc chắn bạn đã sao lưu dữ liệu trước khi tiếp tục.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <button class="px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-red-500 focus:border-red-500">
+                            <i class="fas fa-redo mr-2"></i> Đặt lại hệ thống
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle sidebar
+        document.getElementById('sidebarToggle').addEventListener('click', function() {
+            document.querySelector('.sidebar').classList.toggle('collapsed');
+        });
+
+        // Tab switching
+        const tabs = document.querySelectorAll('.flex.border-b.border-gray-200 button');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                tabs.forEach(t => t.classList.remove('tab-active'));
+                this.classList.add('tab-active');
+            });
+        });
+
+        // Toggle switches
+        const switches = document.querySelectorAll('.switch input');
+        switches.forEach(switchEl => {
+            switchEl.addEventListener('change', function() {
+                const parent = this.closest('.flex.justify-between.items-center');
+                if (parent) {
+                    const status = this.checked ? 'Bật' : 'Tắt';
+                    const settingName = parent.querySelector('span.text-sm.font-medium').textContent;
+                    console.log(`${settingName} đã được ${status}`);
+                }
+            });
+        });
+
+        // Backup button
+        const backupBtn = document.querySelector('[class*="fa-database"]').closest('button');
+        if (backupBtn) {
+            backupBtn.addEventListener('click', function() {
+                alert('Đang thực hiện sao lưu dữ liệu...');
+                // In a real app, you would make an AJAX call to backup endpoint
+            });
+        }
+
+        // Reset system confirmation
+        const resetBtns = document.querySelectorAll('[class*="fa-redo"]');
+        resetBtns.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                if (!confirm('Bạn có chắc chắn muốn đặt lại toàn bộ hệ thống? Toàn bộ cài đặt sẽ bị xóa và khôi phục về mặc định.')) {
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
